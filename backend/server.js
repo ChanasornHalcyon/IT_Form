@@ -14,7 +14,6 @@ const db = mysql.createConnection({
 
 app.post("/verifyUser", (req, res) => {
   const { username, password } = req.body;
- 
 });
 
 const PORT = 4000;
