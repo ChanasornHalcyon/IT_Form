@@ -1,22 +1,27 @@
+require("dotenv").config();
 const express = require("express");
-const app = express();
 const cors = require("cors");
 const mysql = require("mysql2/promise");
 
-let db = null;
+const app = express();
+app.use(cors());
+app.use(express.json());
 
+let db;
 const initMySQL = async () => {
   db = await mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "khemnak1530",
-    database: "halcyon_internal",
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   });
 };
-app.use(express.json());
-app.use(cors());
 
-app.post("/verifyUser/", async (req, res) => {
+app.get("/", (req, res) => {
+  res.send("✅ API is running on Railway");
+});
+
+app.post("/verifyUser", async (req, res) => {
   const { username, password } = req.body;
   try {
     const [rows] = await db.query(
@@ -26,17 +31,16 @@ app.post("/verifyUser/", async (req, res) => {
     if (rows.length > 0) {
       res.json({ success: true, user: rows[0] });
     } else {
-      res
-        .status(400)
-        .json({ success: false, message: "Username หรือ Password ไม่ถูกต้อง" });
+      res.status(400).json({ success: false, message: "Invalid credentials" });
     }
   } catch (err) {
-    console.error("❌ Database error:", err);
+    console.error("Database error:", err);
+    res.status(500).json({ error: "Database error" });
   }
 });
 
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, async () => {
   await initMySQL();
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
