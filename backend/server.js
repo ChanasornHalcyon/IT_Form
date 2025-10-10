@@ -16,10 +16,6 @@ const initMySQL = async () => {
 app.use(express.json());
 app.use(cors());
 
-app.get("/", (req, res) => {
-  res.send("API is running ✅");
-});
-
 app.post("/verifyUser/", async (req, res) => {
   const { username, password } = req.body;
   try {
