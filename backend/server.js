@@ -16,11 +16,11 @@ const initMySQL = async () => {
 app.use(express.json());
 app.use(cors());
 
-app.get("/user/:id", async (req, res) => {
-  let id = req.params.id;
-  const results = await db.query("select * from user where id =? ", id);
+app.get("/user/", async (req, res) => {
+  
+  const results = await db.query("select * from user ");
   if (results[0].length > 0) {
-    res.json(results[0][0]);
+    res.json(results[0]);
   } else {
     res.status(404).json({
       message: "หาไม่เจอ",

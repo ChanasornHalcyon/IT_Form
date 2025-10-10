@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Navbar from "./components/Navbar";
-
+import axios from "axios";
 const Index = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -54,7 +54,7 @@ const Index = () => {
 
             <button
               type="submit"
-              className="w-full cursor-pointer bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition"
+              className="w-full  bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition cursor-pointer"
             >
               Login
             </button>
