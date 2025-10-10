@@ -16,6 +16,10 @@ const initMySQL = async () => {
 app.use(express.json());
 app.use(cors());
 
+app.get("/", (req, res) => {
+  res.send("API is running ✅");
+});
+
 app.post("/verifyUser/", async (req, res) => {
   const { username, password } = req.body;
   try {
@@ -35,8 +39,12 @@ app.post("/verifyUser/", async (req, res) => {
   }
 });
 
-const PORT = 4000;
 app.listen(PORT, async () => {
-  await initMySQL();
-  console.log(`🚀 Server running at http://localhost:${PORT}`);
+  try {
+    await initMySQL();
+    console.log(`🚀 Server running on port ${PORT}`);
+  } catch (err) {
+    console.error("❌ Failed to start server:", err);
+    process.exit(1);
+  }
 });
