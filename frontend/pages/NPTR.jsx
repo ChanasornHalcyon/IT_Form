@@ -68,7 +68,7 @@ const NPTR = () => {
               </tr>
             </thead>
 
-            <tbody className="bg-gray-200">
+            <tbody className="bg-[#F5F5F5]">
               {dataNPTR.length > 0 ? (
                 dataNPTR.map((item, index) => (
                   <tr key={index} className=" border  border-gray-900">

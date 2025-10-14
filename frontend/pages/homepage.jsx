@@ -1,6 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import Navbar from "./components/Navbar";
+import Searchbar from "./components/Searchbar";
 
 const Homepage = () => {
   const router = useRouter();
@@ -12,9 +13,7 @@ const Homepage = () => {
   return (
     <div className="container mx-auto max-w-[1920px] h-dvh bg-[#F8F8FF] relative">
       <Navbar />
-      <div className="flex w-full  px-5 mt-5">
-        <div className="flex flex-1 justify-center md:mt-10"></div>
-      </div>
+      <Searchbar/>
       <div className=" md:mt-14 py-10">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 max-w-6xl mx-5 xl:mx-auto ">
           {card.map((item, index) => (

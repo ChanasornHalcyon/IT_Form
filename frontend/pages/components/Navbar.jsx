@@ -11,14 +11,14 @@ const Navbar = () => {
     localStorage.removeItem("username");
     router.push("/");
   };
-
+  const goHomePage = () => {
+    router.push("../Homepage");
+  };
   useEffect(() => {
     const showUserName = localStorage.getItem("username");
     if (showUserName) setUsername(showUserName);
   }, []);
-  const goHomePage = () => {
-    router.push("../Homepage");
-  };
+
   return (
     <nav className="bg-[#0B4EA2] p-5 flex justify-between items-center relative">
       <img
