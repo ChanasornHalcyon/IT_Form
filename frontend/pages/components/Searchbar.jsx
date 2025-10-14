@@ -4,7 +4,7 @@ import { useState } from "react";
 import ModalAddFile from "./ModalAddFile";
 import axios from "axios";
 
-const Searchbar = () => {
+const Searchbar = ({ fetchDataNPTR }) => {
   const [openModal, setOpenModal] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const clickOpenModal = () => {
@@ -12,7 +12,7 @@ const Searchbar = () => {
   };
   const handleSubmit = async (formData) => {
     setSubmitting(true);
-    
+
     try {
       const data = new FormData();
       data.append("reason", formData.reason);
@@ -27,8 +27,9 @@ const Searchbar = () => {
       });
 
       if (res.data.success) {
-        alert("✅ บันทึกข้อมูลสำเร็จ!");
+        alert(" บันทึกข้อมูลสำเร็จ!");
         setOpenModal(false);
+        fetchDataNPTR();
       } else {
         alert("⚠️ ไม่สามารถบันทึกข้อมูลได้");
       }

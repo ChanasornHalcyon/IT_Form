@@ -70,7 +70,36 @@ app.post("/pushData", upload.single("image"), async (req, res) => {
     res.json({ success: true, message: "Data inserted successfully" });
   } catch (err) {
     console.error("❌ Error:", err);
-    res.status(500).json({ success: false, message: "Database error" });
+  }
+});
+
+app.get("/getNPTR", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      "SELECT * FROM file_records WHERE customer_name = ?",
+      ["NPTR"]
+    );
+
+    if (rows.length > 0) {
+      res.json({ success: true, data: rows });
+    } else {
+      res
+        .status(404)
+        .json({ success: false, message: "ไม่พบข้อมูลของลูกค้า NPTR" });
+    }
+  } catch (err) {
+    console.error("❌ Database error:", err);
+  }
+});
+
+app.delete("/delete/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await db.query("DELETE FROM file_records WHERE id = ?", [id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Delete error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 

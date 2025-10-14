@@ -26,7 +26,7 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
   return (
     <>
       <motion.div
-        className="fixed inset-0 z-50 flex justify-center items-start mt-20"
+        className="fixed inset-0 z-50 flex justify-center items-start mt-10"
         initial={{ opacity: 0, y: -50 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -50 }}
@@ -130,7 +130,7 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
                   <img
                     src={preview}
                     alt="Preview"
-                    className="w-20 h-20 object-cover rounded border"
+                    className="w-28 h-28 object-cover rounded border"
                   />
                 </div>
               )}

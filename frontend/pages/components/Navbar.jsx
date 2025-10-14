@@ -16,10 +16,17 @@ const Navbar = () => {
     const showUserName = localStorage.getItem("username");
     if (showUserName) setUsername(showUserName);
   }, []);
-
+  const goHomePage = () => {
+    router.push("../Homepage");
+  };
   return (
     <nav className="bg-[#0B4EA2] p-5 flex justify-between items-center relative">
-      <img className="w-24" src="iims.PNG" alt="iims" />
+      <img
+        onClick={goHomePage}
+        className="w-24 cursor-pointer"
+        src="iims.PNG"
+        alt="iims "
+      />
 
       {isIndexPage ? (
         <button className="hidden md:flex px-3 py-1 bg-white text-[#FF1493] rounded-md hover:bg-[#FF1493] hover:text-white">
