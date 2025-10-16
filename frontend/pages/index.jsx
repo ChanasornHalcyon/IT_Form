@@ -11,10 +11,13 @@ const Index = () => {
   const login = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("https://halcyonone-internal-test.onrender.com/verifyUser", {
-        username,
-        password,
-      });
+      const res = await axios.post(
+        "https://halcyonone-internal-test.onrender.com",
+        {
+          username,
+          password,
+        }
+      );
 
       if (res.data.success) {
         localStorage.setItem("username", res.data.user.username);
