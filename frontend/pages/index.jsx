@@ -12,7 +12,7 @@ const Index = () => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://halcyonone-internal-test.onrender.com",
+        "https://halcyonone-internal.onrender.com",
         {
           username,
           password,
