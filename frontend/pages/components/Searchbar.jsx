@@ -21,20 +21,24 @@ const Searchbar = ({ fetchDataNPTR, fetchDataNPTA }) => {
       data.append("customer_name", formData.customerName);
       if (formData.image) data.append("image", formData.image);
 
-      const res = await axios.post("http://localhost:4000/pushData", data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await axios.post(
+        "https://halcyonone-internalz.onrender.com/pushData",
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       if (res.data.success) {
-        alert("✅ บันทึกข้อมูลสำเร็จ!");
+        alert(" บันทึกข้อมูลสำเร็จ!");
         setOpenModal(false);
         fetchDataNPTR?.();
         fetchDataNPTA?.();
       } else {
-        alert("⚠️ ไม่สามารถบันทึกข้อมูลได้");
+        alert(" ไม่สามารถบันทึกข้อมูลได้");
       }
     } catch (error) {
-      console.error("❌ Error submitting data:", error);
+      console.error(" Error submitting data:", error);
     } finally {
       setSubmitting(false);
     }

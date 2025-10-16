@@ -10,28 +10,28 @@ const NCOT = () => {
 
   const fetchDataNCOT = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/getNCOT");
+      const res = await axios.get("https://halcyonone-internalz.onrender.com/getNCOT");
       if (res.data.success) {
         setDataNCOT(res.data.data);
       } else {
-        console.warn("⚠️ ไม่พบข้อมูล NCOT");
+        console.warn(" ไม่พบข้อมูล NCOT");
       }
     } catch (err) {
-      console.error("❌ Error fetching data:", err);
+      console.error(" Error fetching data:", err);
     }
   };
 
   const handleDelete = async (id) => {
     if (!confirm("ยืนยันการลบข้อมูลนี้ใช่หรือไม่?")) return;
     try {
-      const res = await axios.delete(`http://localhost:4000/delete/${id}`);
+      const res = await axios.delete(`https://halcyonone-internalz.onrender.com/delete/${id}`);
       if (res.data.success) {
         setDataNCOT((prev) => prev.filter((item) => item.id !== id));
       } else {
         alert("เกิดข้อผิดพลาดในการลบข้อมูล");
       }
     } catch (err) {
-      console.error("❌ Delete error:", err);
+      console.error(" Delete error:", err);
     }
   };
 
@@ -98,7 +98,7 @@ const NCOT = () => {
                     {item.image_url ? (
                       <div className="flex justify-center items-center">
                         <img
-                          src={`http://localhost:4000${item.image_url}`}
+                          src={`https://halcyonone-internalz.onrender.com${item.image_url}`}
                           alt="Preview"
                           className="w-16 h-16 object-cover rounded-md border cursor-pointer hover:scale-105 transition-transform"
                           onClick={() => setPreviewImage(item.image_url)}
