@@ -14,17 +14,17 @@ const NPTA = () => {
       if (res.data.success) {
         setDataNPTA(res.data.data);
       } else {
-        console.warn(" ไม่พบข้อมูล NPTA");
+        console.warn("⚠️ ไม่พบข้อมูล NPTA");
       }
     } catch (err) {
-      console.error("Error fetching data:", err);
+      console.error("❌ Error fetching data:", err);
     }
   };
 
   const handleDelete = async (id) => {
     if (!confirm("ยืนยันการลบข้อมูลนี้ใช่หรือไม่?")) return;
     try {
-      const res = await axios.delete(`https://halcyonone-internalz.onrender.com/delete/${id}`);
+      const res = await axios.delete(`http://localhost:4000/delete/${id}`);
       if (res.data.success) {
         setDataNPTA((prev) => prev.filter((item) => item.id !== id));
       } else {
@@ -98,7 +98,7 @@ const NPTA = () => {
                     {item.image_url ? (
                       <div className="flex justify-center items-center">
                         <img
-                          src={`https://halcyonone-internalz.onrender.com${item.image_url}`}
+                          src={`http://localhost:4000${item.image_url}`}
                           alt="Preview"
                           className="w-16 h-16 object-cover rounded-md border cursor-pointer hover:scale-105 transition-transform"
                           onClick={() => setPreviewImage(item.image_url)}
@@ -143,7 +143,7 @@ const NPTA = () => {
               </div>
 
               <img
-                src={`https://halcyonone-internalz.onrender.com${previewImage}`}
+                src={`http://localhost:4000${previewImage}`}
                 alt="Full Preview"
                 className="w-full h-auto max-h-[80vh] object-contain rounded-md"
               />
