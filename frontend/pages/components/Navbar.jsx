@@ -12,7 +12,7 @@ const Navbar = () => {
     router.push("/");
   };
   const goHomePage = () => {
-    router.push("../Homepage");
+    router.push("../homepage");
   };
   useEffect(() => {
     const showUserName = localStorage.getItem("username");
