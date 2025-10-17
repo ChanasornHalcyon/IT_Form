@@ -4,7 +4,6 @@ const mysql = require("mysql2/promise");
 const multer = require("multer");
 const path = require("path");
 const app = express();
-const dotenv = require("dotenv");
 require("dotenv").config();
 app.use(cors());
 app.use(express.json());
