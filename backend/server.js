@@ -5,7 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const app = express();
 const dotenv = require("dotenv");
-dotenv.config();
+require("dotenv").config();
 app.use(cors());
 app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
