@@ -5,20 +5,29 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
   const [form, setForm] = useState({
     reason: "",
     description: "",
-    material: "",
     customerPart: "",
     dwgNo: "",
     customerName: "",
-    image: null,
+    file: null,
   });
   const [preview, setPreview] = useState(null);
+  const [fileType, setFileType] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     if (type === "file" && files.length > 0) {
       const file = files[0];
-      setForm((prev) => ({ ...prev, [name]: file }));
-      setPreview(URL.createObjectURL(file));
+      setForm((prev) => ({ ...prev, file }));
+
+      const isImage = file.type.startsWith("image/");
+      const isPDF = file.type === "application/pdf";
+      setFileType(isImage ? "image" : isPDF ? "pdf" : "other");
+
+      if (isImage) {
+        setPreview(URL.createObjectURL(file));
+      } else {
+        setPreview(null);
+      }
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
@@ -74,12 +83,14 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
                 Material
               </label>
               <input
+                type="text"
                 name="material"
-                value={form.material}
+                value={form.material || ""}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:border-[#3698FC] text-black"
               />
             </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -123,12 +134,12 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Upload Image
+                Upload Image / PDF
               </label>
               <input
                 type="file"
-                name="image"
-                accept="image/*"
+                name="file"
+                accept="image/*,application/pdf"
                 onChange={handleChange}
                 className="w-full text-sm text-gray-600 border border-gray-300 rounded-md 
                            file:mr-4 file:py-2 file:px-4 file:border-0 
@@ -136,13 +147,26 @@ const ModalAddFile = ({ onClose, onSubmit, submitting }) => {
                            hover:file:bg-blue-500 cursor-pointer"
               />
 
-              {preview && (
+              {fileType === "image" && preview && (
                 <div className="mt-3 flex justify-center">
                   <img
                     src={preview}
                     alt="Preview"
                     className="w-28 h-28 object-cover rounded border"
                   />
+                </div>
+              )}
+
+              {fileType === "pdf" && form.file && (
+                <div className="mt-3 text-center">
+                  <a
+                    href={URL.createObjectURL(form.file)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 "
+                  >
+                    View PDF
+                  </a>
                 </div>
               )}
             </div>
