@@ -58,7 +58,7 @@ app.post("/verifyUser", async (req, res) => {
   }
 });
 
-app.post("/pushData", upload.single("image"), async (req, res) => {
+ app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
       reason,
