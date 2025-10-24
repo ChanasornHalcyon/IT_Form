@@ -79,11 +79,11 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
 
     const sql = `
-      INSERT INTO drawing_records 
-      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
-       material_main, material_sub, pcd_grade, file_url)
-      VALUES ($1, $2, $3, $4, $5, $6,$7)
-    `;
+  INSERT INTO drawing_records 
+  (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
+   material_main, material_sub, pcd_grade, file_url)
+  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+`;
     await db.query(sql, [
       employee_drawing,
       customerName,
