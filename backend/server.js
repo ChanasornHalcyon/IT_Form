@@ -40,11 +40,13 @@ const db = new Pool({
 
 app.post("/verifyUser", async (req, res) => {
   const { username, password } = req.body;
+
   try {
     const result = await db.query(
-      "SELECT * FROM users WHERE username = $1 AND password = $2",
+      "SELECT id, username, password FROM users WHERE username = $1 AND password = $2",
       [username, password]
     );
+
     if (result.rows.length > 0) {
       res.json({ success: true, user: result.rows[0] });
     } else {
@@ -53,12 +55,13 @@ app.post("/verifyUser", async (req, res) => {
         .json({ success: false, message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
     }
   } catch (err) {
-    console.error("❌ verifyUser Error:", err);
-    res.status(500).json({ success: false });
+    console.error(" verifyUser Error:", err);
+    res
+      .status(500)
+      .json({ success: false, message: "เกิดข้อผิดพลาดของเซิร์ฟเวอร์" });
   }
 });
-
- app.post("/pushData", upload.single("file"), async (req, res) => {
+app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
       reason,
@@ -68,6 +71,7 @@ app.post("/verifyUser", async (req, res) => {
       dwg_no,
       customer_name,
     } = req.body;
+
     const image_url = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = `
       INSERT INTO file_records 
@@ -90,26 +94,17 @@ app.post("/verifyUser", async (req, res) => {
   }
 });
 
-const getByCustomer = (customer) => async (req, res) => {
+app.get("/getAllData", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT * FROM file_records WHERE customer_name = $1",
-      [customer]
+      "SELECT * FROM drawing_records ORDER BY id ASC"
     );
-    if (result.rows.length > 0) {
-      res.json({ success: true, data: result.rows });
-    } else {
-      res.json({ success: false, message: `ไม่พบข้อมูลของลูกค้า ${customer}` });
-    }
+    res.json({ success: true, data: result.rows });
   } catch (err) {
-    console.error(" getByCustomer Error:", err);
+    console.error(" getAllData Error:", err);
     res.status(500).json({ success: false });
   }
-};
-
-app.get("/getNPTR", getByCustomer("NPTR"));
-app.get("/getNPTA", getByCustomer("NPTA"));
-app.get("/getNCOT", getByCustomer("NCOT"));
+});
 
 app.delete("/delete/:id", async (req, res) => {
   try {
