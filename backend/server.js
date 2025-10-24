@@ -64,29 +64,40 @@ app.post("/verifyUser", async (req, res) => {
 app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
-      reason,
+      employee_drawing,
+      customerName,
+      date,
+      drawingNo,
+      rev,
+      customerPart,
       description,
-      material,
-      customer_part,
-      dwg_no,
-      customer_name,
+      materialMain,
+      materialSub,
+      pcdGrade,
     } = req.body;
 
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const file_url = req.file ? `/uploads/${req.file.filename}` : null;
+
     const sql = `
-      INSERT INTO file_records 
-      (reason, description,material, customer_part, dwg_no, customer_name, image_url)
+      INSERT INTO drawing_records 
+      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
+       material_main, material_sub, pcd_grade, file_url)
       VALUES ($1, $2, $3, $4, $5, $6,$7)
     `;
     await db.query(sql, [
-      reason,
+      employee_drawing,
+      customerName,
+      date,
+      drawingNo,
+      rev,
+      customerPart,
       description,
-      material,
-      customer_part,
-      dwg_no,
-      customer_name,
-      image_url,
+      materialMain,
+      materialSub,
+      pcdGrade,
+      file_url,
     ]);
+
     res.json({ success: true, message: "Data inserted successfully" });
   } catch (err) {
     console.error(" pushData Error:", err);
@@ -102,16 +113,6 @@ app.get("/getAllData", async (req, res) => {
     res.json({ success: true, data: result.rows });
   } catch (err) {
     console.error(" getAllData Error:", err);
-    res.status(500).json({ success: false });
-  }
-});
-
-app.delete("/delete/:id", async (req, res) => {
-  try {
-    await db.query("DELETE FROM file_records WHERE id = $1", [req.params.id]);
-    res.json({ success: true });
-  } catch (err) {
-    console.error(" Delete error:", err);
     res.status(500).json({ success: false });
   }
 });
