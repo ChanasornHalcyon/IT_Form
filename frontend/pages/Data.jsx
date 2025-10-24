@@ -7,7 +7,9 @@ const Data = () => {
   const [data, setData] = useState([]);
   const fetchData = async () => {
     try {
-      const res = await axios.get("http://localhost:4000/getAllData");
+      const res = await axios.get(
+        "https://halcyonone-internal.onrender.com/getAllData"
+      );
       setData(res.data.data);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -71,7 +73,7 @@ const Data = () => {
                     <td className="px-4 py-2 border text-center">
                       {item.file_url ? (
                         <a
-                          href={`http://localhost:4000${item.file_url}`}
+                          href={`https://halcyonone-internal.onrender.com${item.file_url}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center hover:scale-110 transition-transform"

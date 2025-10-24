@@ -26,7 +26,7 @@ const Navbar = () => {
         <img
           onClick={goHomePage}
           className="w-14 cursor-pointer ml-4 filter "
-          src="ht-logo.PNG"
+          src="ht-logo.png"
           alt="HT"
         />
         <span className="text-black hidden lg:flex text-xl font-bold">
