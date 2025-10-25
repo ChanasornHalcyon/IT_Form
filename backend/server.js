@@ -76,7 +76,7 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       pcdGrade,
     } = req.body;
 
-    const image_url = req.file ? `/uploads/${req.file.filename}` : null;
+    const file_url = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = `
       INSERT INTO drawing_records 
       (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
