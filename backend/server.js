@@ -4,7 +4,6 @@ const { Pool } = require("pg");
 const multer = require("multer");
 const path = require("path");
 require("dotenv").config();
-
 const app = express();
 
 app.use(
@@ -21,7 +20,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
+  destination: (req, file, cb) => cb(null, uploadDir),
   filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
