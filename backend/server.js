@@ -118,10 +118,10 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       file_url,
     });
   } catch (err) {
-  console.error("🔥 pushData Error:", err.message);
-  console.error(err.stack);
-  res.status(500).json({ success: false, message: err.message });
-}
+    console.error("🔥 pushData Error:", err.message);
+    console.error(err.stack);
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 app.get("/getAllData", async (req, res) => {
