@@ -63,6 +63,8 @@ const Add_Drawing = () => {
       formData.append("pcd_grade", form.pcdGrade);
       formData.append("file", form.file);
 
+      console.log(" formData:", Array.from(formData.entries()));
+
       const res = await axios.post(
         "https://halcyonone-internal.onrender.com/pushData",
         formData,
@@ -87,12 +89,9 @@ const Add_Drawing = () => {
         });
         setPreview(null);
       } else {
-        alert(" Submit Failed!");
+        alert("❌ Submit Failed!");
       }
-    } catch (err) {
-      console.error("Submit error:", err);
-      alert("Server Error!");
-    }
+    } catch (err) {}
   };
 
   return (
