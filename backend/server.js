@@ -65,6 +65,9 @@ app.post("/verifyUser", async (req, res) => {
 
 app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file);
+
     const {
       employee_drawing,
       customerName,
@@ -78,50 +81,33 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       pcdGrade,
     } = req.body;
 
+    if (!employee_drawing || !customerName || !date) {
+      console.error("Missing fields:", { employee_drawing, customerName, date });
+      return res.status(400).json({ success: false, message: "Missing required fields" });
+    }
+
     const empId = parseInt(employee_drawing, 10);
     if (isNaN(empId)) {
-      return res
-        .status(400)
-        .json({ success: false, message: "employee_drawing must be a number" });
+      throw new Error(`employee_drawing is not a number: ${employee_drawing}`);
     }
 
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
 
-    const sql = `
-      INSERT INTO drawing_records 
-      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, 
-       description, material_main, material_sub, pcd_grade, file_url)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-    `;
-
-    await db.query(sql, [
-      empId,
-      customerName,
-      date,
-      drawingNo,
-      rev,
-      customerPart,
-      description,
-      materialMain,
-      materialSub,
-      pcdGrade,
-      file_url,
-    ]);
-
-    console.log(" New Drawing Added:", {
-      empId,
-      customerName,
-      drawingNo,
-      date,
-      file_url,
-    });
+    await db.query(
+      `INSERT INTO drawing_records 
+       (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no,
+        description, material_main, material_sub, pcd_grade, file_url)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)`,
+      [empId, customerName, date, drawingNo, rev, customerPart, description, materialMain, materialSub, pcdGrade, file_url]
+    );
 
     res.json({ success: true, message: "Drawing added successfully!" });
   } catch (err) {
-    console.error(" pushData Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error(" pushData Error:", err.stack || err);
+    res.status(500).json({ success: false, message: err.message });
   }
 });
+
 
 app.get("/getAllData", async (req, res) => {
   try {
