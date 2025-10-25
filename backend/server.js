@@ -3,8 +3,21 @@ const cors = require("cors");
 const { Pool } = require("pg");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
+const os = require("os");
 require("dotenv").config();
+
 const app = express();
+
+const uploadDir =
+  process.env.NODE_ENV === "production"
+    ? path.join(os.tmpdir(), "uploads")
+    : path.join(__dirname, "uploads");
+
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+  console.log("📁 Created uploads directory:", uploadDir);
+}
 
 app.use(
   cors({
@@ -17,15 +30,16 @@ app.use(
   })
 );
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(uploadDir));
 
 const storage = multer.diskStorage({
-  destination: (req, file, res) => res(null, "uploads/"),
-  filename: (req, file, res) => {
-    const uniqueName = Date.now() + "-" + file.originalname;
-    res(null, uniqueName);
+  destination: (req, file, cb) => cb(null, uploadDir),
+  filename: (req, file, cb) => {
+    const safeName = Date.now() + "-" + file.originalname.replace(/\s+/g, "_");
+    cb(null, safeName);
   },
 });
+
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
@@ -46,25 +60,25 @@ const db = new Pool({
 
 app.post("/verifyUser", async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const result = await db.query(
       "SELECT id, username, password FROM users WHERE username = $1 AND password = $2",
       [username, password]
     );
-
     if (result.rows.length > 0) {
       res.json({ success: true, user: result.rows[0] });
     } else {
-      res
-        .status(400)
-        .json({ success: false, message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
+      res.status(400).json({
+        success: false,
+        message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+      });
     }
   } catch (err) {
-    console.error(" verifyUser Error:", err);
-    res
-      .status(500)
-      .json({ success: false, message: "เกิดข้อผิดพลาดของเซิร์ฟเวอร์" });
+    console.error("verifyUser Error:", err);
+    res.status(500).json({
+      success: false,
+      message: "เกิดข้อผิดพลาดของเซิร์ฟเวอร์",
+    });
   }
 });
 
@@ -83,17 +97,30 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       pcdGrade,
     } = req.body;
 
+    if (!employee_drawing || !customerName || !date) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Missing required fields" });
+    }
+
+    const empId = parseInt(employee_drawing, 10);
+    if (isNaN(empId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "employee_drawing must be a number" });
+    }
+
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
 
     const sql = `
       INSERT INTO drawing_records 
-      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
-       material_main, material_sub, pcd_grade, file_url)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no,
+       description, material_main, material_sub, pcd_grade, file_url)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     `;
 
     await db.query(sql, [
-      employee_drawing,
+      empId,
       customerName,
       date,
       drawingNo,
@@ -106,10 +133,13 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       file_url,
     ]);
 
-    res.json({ success: true, message: " Drawing added successfully!" });
+    res.json({ success: true, message: "Drawing added successfully!" });
   } catch (err) {
-    console.error(" pushData Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("pushData Error:", err.message);
+    res.status(500).json({
+      success: false,
+      message: `Server error: ${err.message}`,
+    });
   }
 });
 
@@ -120,7 +150,7 @@ app.get("/getAllData", async (req, res) => {
     );
     res.json({ success: true, data: result.rows });
   } catch (err) {
-    console.error(" getAllData Error:", err);
+    console.error("getAllData Error:", err);
     res.status(500).json({ success: false });
   }
 });
