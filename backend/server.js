@@ -136,11 +136,11 @@ app.get("/getAllData", async (req, res) => {
   }
 });
 
-app.get("/preview/:id", async (req, res) => {
+app.get("/preview/file/:filename", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT file_url FROM drawing_records WHERE id = $1",
-      [req.params.id]
+      "SELECT file_url FROM drawing_records WHERE file_url LIKE $1",
+      [`%${req.params.filename}`]
     );
     const rows = result.rows;
 
@@ -156,6 +156,7 @@ app.get("/preview/:id", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
