@@ -18,7 +18,11 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname); 
+    const safeName = Date.now() + ext; 
+    cb(null, safeName);
+  },
 });
 const upload = multer({
   storage,
@@ -77,9 +81,9 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = `
      INSERT INTO drawing_records 
-(customer_name, date, drawing_no, rev, customer_part_no, description,
- material_main, material_sub, pcd_grade, file_url)
-VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+     (customer_name, date, drawing_no, rev, customer_part_no, description,
+     material_main, material_sub, pcd_grade, file_url)
+    VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     `;
     await db.query(sql, [
       customer_name,
