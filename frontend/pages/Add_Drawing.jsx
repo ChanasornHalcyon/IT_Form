@@ -48,7 +48,6 @@ const Add_Drawing = () => {
       Object.entries(form).forEach(([key, value]) => {
         formData.append(key, value);
       });
-
       const userId = localStorage.getItem("userId");
       if (userId) {
         formData.append("employee_drawing", userId);
