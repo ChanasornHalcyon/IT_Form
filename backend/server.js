@@ -64,17 +64,16 @@ app.post("/verifyUser", async (req, res) => {
 app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
-      customerName,
+      customer_name,
       date,
-      drawingNo,
+      drawing_no,
       rev,
-      customerPart,
+      customer_part_no,
       description,
-      materialMain,
-      materialSub,
-      pcdGrade,
+      material_main,
+      material_sub,
+      pcd_grade,
     } = req.body;
-
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
     const sql = `
      INSERT INTO drawing_records 
@@ -83,15 +82,15 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
 VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     `;
     await db.query(sql, [
-      customerName,
+      customer_name,
       date,
-      drawingNo,
+      drawing_no,
       rev,
-      customerPart,
+      customer_part_no,
       description,
-      materialMain,
-      materialSub,
-      pcdGrade,
+      material_main,
+      material_sub,
+      pcd_grade,
       file_url,
     ]);
     res.json({ success: true, message: "Data inserted successfully" });
