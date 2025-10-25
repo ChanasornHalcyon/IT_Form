@@ -18,8 +18,7 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, "uploads/"),
-  filename: (req, file, cb) =>
-    cb(null, Date.now() + "-" + file.originalname),
+  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
 });
 
 const upload = multer({
@@ -63,6 +62,7 @@ app.post("/verifyUser", async (req, res) => {
       .json({ success: false, message: "เกิดข้อผิดพลาดของเซิร์ฟเวอร์" });
   }
 });
+
 app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
@@ -78,17 +78,24 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       pcdGrade,
     } = req.body;
 
+    const empId = parseInt(employee_drawing, 10);
+    if (isNaN(empId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: "employee_drawing must be a number" });
+    }
+
     const file_url = req.file ? `/uploads/${req.file.filename}` : null;
 
     const sql = `
       INSERT INTO drawing_records 
-      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
-       material_main, material_sub, pcd_grade, file_url)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, 
+       description, material_main, material_sub, pcd_grade, file_url)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     `;
 
     await db.query(sql, [
-      employee_drawing,
+      empId,
       customerName,
       date,
       drawingNo,
@@ -101,7 +108,15 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       file_url,
     ]);
 
-    res.json({ success: true, message: " Drawing added successfully!" });
+    console.log(" New Drawing Added:", {
+      empId,
+      customerName,
+      drawingNo,
+      date,
+      file_url,
+    });
+
+    res.json({ success: true, message: "Drawing added successfully!" });
   } catch (err) {
     console.error(" pushData Error:", err);
     res.status(500).json({ success: false, message: "Server error" });
@@ -121,6 +136,4 @@ app.get("/getAllData", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
