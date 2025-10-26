@@ -1,27 +1,22 @@
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
-const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
-
+app.use(express.json({ limit: "10mb" }));
 app.use(
   cors({
     origin: ["https://halcyon-one-internal.vercel.app"],
     credentials: true,
   })
 );
-app.use(express.json());
 
-const upload = multer({
-  storage: multer.memoryStorage(),
-  fileFilter: (req, file, cb) => {
-    const allowed = ["image/jpeg", "image/png", "application/pdf"];
-    if (allowed.includes(file.mimetype)) cb(null, true);
-    else cb(new Error("Only images or PDFs are allowed!"));
-  },
-});
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+app.use("/uploads", express.static(uploadDir));
 
 const db = new Pool({
   host: process.env.DB_HOST,
@@ -46,7 +41,7 @@ app.post("/verifyUser", async (req, res) => {
         .status(400)
         .json({ success: false, message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
     }
-  } catch {
+  } catch (err) {
     res
       .status(500)
       .json({ success: false, message: "เกิดข้อผิดพลาดของเซิร์ฟเวอร์" });
@@ -70,15 +65,10 @@ app.post("/pushData", async (req, res) => {
 
     let file_url = null;
     if (fileBase64) {
-      const uploadDir = path.join(__dirname, "uploads");
-      if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-
+      const buffer = Buffer.from(fileBase64, "base64");
       const fileName = `${Date.now()}-drawing.pdf`;
       const filePath = path.join(uploadDir, fileName);
-
-      const buffer = Buffer.from(fileBase64, "base64");
       fs.writeFileSync(filePath, buffer);
-
       file_url = `/uploads/${fileName}`;
     }
 
@@ -88,7 +78,6 @@ app.post("/pushData", async (req, res) => {
        material_main, material_sub, pcd_grade, file_url)
       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
     `;
-
     const dateValue = date ? date.split("T")[0] : null;
 
     await db.query(sql, [
@@ -114,25 +103,10 @@ app.post("/pushData", async (req, res) => {
 app.get("/getAllData", async (req, res) => {
   try {
     const result = await db.query(
-      "SELECT id, customer_name, date, drawing_no, rev, customer_part_no, description, material_main, material_sub, pcd_grade FROM drawing_records ORDER BY id ASC"
+      "SELECT * FROM drawing_records ORDER BY id ASC"
     );
     res.json({ success: true, data: result.rows });
-  } catch {
-    res.status(500).json({ success: false });
-  }
-});
-
-app.get("/getFile/:id", async (req, res) => {
-  try {
-    const result = await db.query(
-      "SELECT file_base64 FROM drawing_records WHERE id = $1",
-      [req.params.id]
-    );
-    if (result.rows.length === 0) return res.status(404).send("File not found");
-
-    const fileBase64 = result.rows[0].file_base64;
-    res.json({ success: true, base64: fileBase64 });
-  } catch {
+  } catch (err) {
     res.status(500).json({ success: false });
   }
 });
