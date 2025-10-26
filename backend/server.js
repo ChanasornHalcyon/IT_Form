@@ -97,5 +97,43 @@ app.get("/getAllData", async (req, res) => {
   }
 });
 
+app.get("/getFile/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await db.query(
+      "SELECT file_url FROM drawing_records WHERE id = $1",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "File not found" });
+    }
+
+    const fileData = result.rows[0].file_url;
+
+    if (!fileData) {
+      return res.status(404).json({ success: false, message: "No file data" });
+    }
+
+    if (fileData.startsWith("data:application/pdf")) {
+      res.setHeader("Content-Type", "application/pdf");
+    } else if (fileData.startsWith("data:image/")) {
+      res.setHeader("Content-Type", "image/png");
+    } else {
+      res.setHeader("Content-Type", "application/octet-stream");
+    }
+
+    const base64Data = fileData.split(",")[1];
+    const buffer = Buffer.from(base64Data, "base64");
+
+    res.send(buffer);
+  } catch (err) {
+    console.error("Error retrieving file:", err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
