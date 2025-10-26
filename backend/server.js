@@ -1,24 +1,19 @@
 const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
-const path = require("path");
-const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
 
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
 app.use(
   cors({
     origin: ["https://halcyon-one-internal.vercel.app"],
     credentials: true,
   })
 );
-
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-app.use("/uploads", express.static(uploadDir));
 
 const db = new Pool({
   host: process.env.DB_HOST,
@@ -39,9 +34,10 @@ app.post("/verifyUser", async (req, res) => {
     if (result.rows.length > 0) {
       res.json({ success: true, user: result.rows[0] });
     } else {
-      res
-        .status(400)
-        .json({ success: false, message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง" });
+      res.status(400).json({
+        success: false,
+        message: "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง",
+      });
     }
   } catch (err) {
     res
@@ -52,6 +48,8 @@ app.post("/verifyUser", async (req, res) => {
 
 app.post("/pushData", async (req, res) => {
   try {
+    console.log("📦 BODY RECEIVED:", req.body);
+
     const {
       customerName,
       date,

@@ -59,7 +59,11 @@ const Add_Drawing = () => {
       const res = await axios.post(
         "https://halcyonone-internal.onrender.com/pushData",
         payload,
-        { headers: { "Content-Type": "application/json" } }
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
       );
 
       if (res.data.success) {
