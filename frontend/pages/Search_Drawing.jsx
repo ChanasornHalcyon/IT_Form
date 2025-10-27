@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
+import { useRouter } from "next/router";
 
 const Search_Drawing = () => {
+  const router = useRouter();
   const [form, setForm] = useState({
     customerName: "",
     date: "",
     drawingNo: "",
-    rev: "",
     customerPart: "",
     description: "",
     materialMain: "",
-    materialSub: "",
     pcdGrade: "",
   });
 
@@ -58,9 +58,9 @@ const Search_Drawing = () => {
       <Navbar />
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center justify-center mt-8"
+        className="flex flex-col items-center justify-center mt-5"
       >
-        <div className="w-full max-w-[700px] bg-white px-8 md:px-32 xl:px-28   rounded-xl">
+        <div className="w-full max-w-[700px] bg-white px-8 md:px-32 xl:px-28 rounded-xl">
           <div className="space-y-5 w-full">
             <div>
               <label className="block text-lg font-medium text-gray-700 mb-1">
@@ -76,7 +76,7 @@ const Search_Drawing = () => {
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 Date
               </label>
               <input
@@ -85,12 +85,12 @@ const Search_Drawing = () => {
                 value={form.date}
                 onChange={handleChange}
                 onClick={(e) => e.target.showPicker()}
-                className="block w-full border border-gray-400 rounded-md px-3 py-2 focus:border-[#0B4EA2] text-gray-700 cursor-pointer"
+                className="block w-full border border-gray-400 rounded-md px-3 py-2 text-gray-700 cursor-pointer"
               />
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 Drawing No.
               </label>
               <input
@@ -103,7 +103,7 @@ const Search_Drawing = () => {
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 Customer Part No.
               </label>
               <input
@@ -116,7 +116,7 @@ const Search_Drawing = () => {
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 Description
               </label>
               <input
@@ -129,7 +129,7 @@ const Search_Drawing = () => {
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 Material
               </label>
               <select
@@ -145,7 +145,7 @@ const Search_Drawing = () => {
             </div>
 
             <div>
-              <label className="block texr-lgfont-medium text-gray-700 mb-1">
+              <label className="block text-lg font-medium text-gray-700 mb-1">
                 PCD Grade
               </label>
               <select
