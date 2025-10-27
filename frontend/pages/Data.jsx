@@ -8,28 +8,10 @@ const Data = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get(
-        "https://halcyonone-internal.onrender.com/getAllData"
-      );
+      const res = await axios.get("https://halcyonone-internal.onrender.com/getAllData");
       setData(res.data.data);
     } catch (err) {
       console.error("Error fetching data:", err);
-    }
-  };
-
-  const handleViewFile = async (id) => {
-    try {
-      const res = await axios.get(
-        `https://halcyonone-internal.onrender.com/getFile/${id}`
-      );
-      if (res.data?.base64) {
-        const pdfUrl = `data:application/pdf;base64,${res.data.base64}`;
-        window.open(pdfUrl, "_blank");
-      } else {
-        alert("File not found!");
-      }
-    } catch (err) {
-      console.error("Error opening file:", err);
     }
   };
 
@@ -70,7 +52,11 @@ const Data = () => {
                     className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition"
                   >
                     <td className="px-4 py-2 border text-black">
-                      {item.date ? item.date.split("T")[0] : "-"}
+                      {item.date
+                        ? new Date(item.date).toLocaleDateString("sv-SE", {
+                            timeZone: "Asia/Bangkok",
+                          })
+                        : "-"}
                     </td>
                     <td className="px-4 py-2 border text-black">
                       {item.drawing_no}
@@ -93,19 +79,25 @@ const Data = () => {
                     <td className="px-4 py-2 border text-black">{item.rev}</td>
 
                     <td className="px-4 py-2 border text-center">
-                      <button
-                        onClick={() => handleViewFile(item.id)}
-                        className="inline-flex items-center justify-center hover:scale-110 transition-transform cursor-pointer"
-                        title="View PDF"
-                      >
-                        <FaFilePdf className="text-red-600 text-2xl" />
-                      </button>
+                      {item.file_url ? (
+                        <a
+                          href={`http://localhost:4000${item.file_url}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center justify-center hover:scale-110 transition-transform"
+                          title="View PDF"
+                        >
+                          <FaFilePdf className="text-red-600 text-2xl" />
+                        </a>
+                      ) : (
+                        <span className="text-gray-400">-</span>
+                      )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="9" className="text-center py-4 text-gray-500">
+                  <td colSpan="8" className="text-center py-4 text-gray-500">
                     ไม่มีข้อมูลในระบบ
                   </td>
                 </tr>
@@ -119,3 +111,4 @@ const Data = () => {
 };
 
 export default Data;
+  
