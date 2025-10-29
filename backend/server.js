@@ -2,8 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const { Pool } = require("pg");
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const { createClient } = require("@supabase/supabase-js");
 require("dotenv").config();
 
 const app = express();
@@ -16,22 +15,17 @@ app.use(
 );
 app.use(express.json());
 
-const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
-
-app.use("/uploads", express.static(uploadDir));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, uploadDir),
-  filename: (req, file, cb) => cb(null, Date.now() + "-" + file.originalname),
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
 
 const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
+  storage: multer.memoryStorage(),
+  fileFilter: (req, file, res) => {
     const allowed = ["image/jpeg", "image/png", "application/pdf"];
-    if (allowed.includes(file.mimetype)) cb(null, true);
-    else cb(new Error("Only images or PDFs are allowed!"));
+    if (allowed.includes(file.mimetype)) res(null, true);
+    else res(new Error("Only images or PDFs are allowed!"));
   },
 });
 
@@ -68,6 +62,7 @@ app.post("/verifyUser", async (req, res) => {
 app.post("/pushData", upload.single("file"), async (req, res) => {
   try {
     const {
+      employee_drawing,
       customerName,
       date,
       drawingNo,
@@ -79,19 +74,36 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       pcdGrade,
     } = req.body;
 
-    const file_url = req.file ? `/uploads/${req.file.filename}` : null;
-    const dateValue = date ? date.split("T")[0] : null;
+    let file_url = null;
 
+    if (req.file) {
+      const fileName = `${req.file.originalname}`;
+      const { data, error } = await supabase.storage
+        .from("drawings")
+        .upload(fileName, req.file.buffer, {
+          contentType: req.file.mimetype,
+          upsert: false,
+        });
+
+      if (error) throw error;
+
+      const { data: publicURL } = supabase.storage
+        .from("drawings")
+        .getPublicUrl(fileName);
+
+      file_url = publicURL.publicUrl;
+    }
     const sql = `
       INSERT INTO drawing_records 
-      (customer_name, date, drawing_no, rev, customer_part_no, description,
+      (employee_drawing, customer_name, date, drawing_no, rev, customer_part_no, description,
        material_main, material_sub, pcd_grade, file_url)
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
     `;
 
     await db.query(sql, [
+      employee_drawing,
       customerName,
-      dateValue,
+      date,
       drawingNo,
       rev,
       customerPart,
@@ -102,9 +114,10 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
       file_url,
     ]);
 
-    res.json({ success: true, message: "Data inserted successfully" });
+    res.json({ success: true, message: "Drawing added successfully!" });
   } catch (err) {
-    res.status(500).json({ success: false, message: err.message });
+    console.error("pushData Error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 });
 
@@ -132,7 +145,7 @@ app.post("/searchDrawing", async (req, res) => {
 
     let sql = "SELECT * FROM drawing_records WHERE 1=1";
     const params = [];
-    let paramIndex = 1; 
+    let paramIndex = 1;
 
     if (customerName) {
       sql += ` AND customer_name ILIKE $${paramIndex++}`;

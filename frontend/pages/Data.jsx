@@ -8,7 +8,9 @@ const Data = () => {
 
   const fetchData = async () => {
     try {
-      const res = await axios.get("https://halcyonone-internal.onrender.com/getAllData");
+      const res = await axios.get(
+        "https://halcyonone-internal.onrender.com/getAllData"
+      );
       setData(res.data.data);
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -81,11 +83,11 @@ const Data = () => {
                     <td className="px-4 py-2 border text-center">
                       {item.file_url ? (
                         <a
-                          href={`http://localhost:4000${item.file_url}`}
+                          href={item.file_url}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="inline-flex items-center justify-center hover:scale-110 transition-transform"
-                          title="View PDF"
+                          title="View File"
                         >
                           <FaFilePdf className="text-red-600 text-2xl" />
                         </a>
@@ -111,4 +113,3 @@ const Data = () => {
 };
 
 export default Data;
-  
