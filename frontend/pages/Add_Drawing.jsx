@@ -80,7 +80,7 @@ const Add_Drawing = () => {
       }
     } catch (err) {
       console.error("Submit error:", err);
-      alert(" Server Error!");
+      alert("ชื่อไฟล์ซ้ำ");
     }
   };
 
