@@ -83,8 +83,11 @@ const Add_Drawing = () => {
         alert(" Submit Failed!");
       }
     } catch (err) {
-      console.error("Submit error:", err);
-      alert("ชื่อไฟล์ซ้ำ");
+      if (err.response) {
+        alert(err.response.data?.message || "Server Error!");
+      } else {
+        alert("Network Error!");
+      }
     }
   };
 

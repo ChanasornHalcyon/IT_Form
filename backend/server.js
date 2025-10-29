@@ -185,8 +185,13 @@ app.post("/searchDrawing", async (req, res) => {
     const result = await db.query(sql, params);
     res.json({ success: true, data: result.rows });
   } catch (err) {
-    console.error("searchDrawing Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error("pushData Error:", err);
+
+    if (err.statusCode === "409" || err.status === 409) {
+      return res.status(409).json({ success: false, message: "ชื่อไฟล์ซ้ำ" });
+    }
+
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 });
 
