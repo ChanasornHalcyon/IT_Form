@@ -81,7 +81,7 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
         .from("drawings")
         .upload(fileName, req.file.buffer, {
           contentType: req.file.mimetype,
-        upsert: true,
+          upsert: false,
         });
 
       if (error) throw error;
@@ -115,7 +115,7 @@ app.post("/pushData", upload.single("file"), async (req, res) => {
     res.json({ success: true, message: "Drawing added successfully!" });
   } catch (err) {
     console.error("pushData Error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    res.status(500).json({ success: false, message: "ไฟล์ซ้ำ" });
   }
 });
 
