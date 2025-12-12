@@ -4,7 +4,7 @@ import { FaUserCircle } from "react-icons/fa";
 import { FiLogOut } from "react-icons/fi";
 import { RiLockPasswordFill } from "react-icons/ri";
 // import ModalResetPassword from "./ModalResetPassword";
-
+import { MdComputer } from "react-icons/md";
 const Navbar = () => {
   const router = useRouter();
   const [username, setUsername] = useState("");
@@ -40,21 +40,17 @@ const Navbar = () => {
     <>
       <nav
         className="fixed top-0 left-0 w-full z-50 
-             bg-gradient-to-r from-[#F9A8D4] via-[#FBCFE8] to-[#7DDCFB]
+             bg-gradient-to-r from-[#FF1493]  to-[#7DDCFB]
              backdrop-blur-md
              p-5 flex justify-between items-center shadow-lg border-b border-white/20"
       >
-        <div className="flex items-center gap-3">
-          {/* <img
-            onClick={goHomePage}
-            className="w-14 cursor-pointer ml-4"
-            src="ht-logo.png"
-            alt="HT"
-          /> */}
-          <span className="text-black hidden lg:flex text-xl font-bold ">
+        <div className="flex items-center gap-2">
+          <MdComputer className="text-3xl text-black" />
+          <span className="hidden lg:flex text-xl font-semibold text-gray-800">
             IT Form
           </span>
         </div>
+
 
         {username && (
           <div className="relative inline-block text-left text-red-500 ">
