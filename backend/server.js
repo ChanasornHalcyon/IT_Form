@@ -69,26 +69,34 @@ app.post("/ITForm", async (req, res) => {
 });
 app.get("/getITForm", async (req, res) => {
   try {
-    const [rows] = await db.query(`
-      SELECT 
-        id,
-        purpose,
-        detail,
-        reason,
-        spec,
-        requester,
-        department,
-        request_date,
-        required_date,
-        created_at
-      FROM it_requests
-      ORDER BY created_at DESC
-    `);
+    const [rows] = await db.query(
+      `SELECT *
+       FROM it_requests
+       ORDER BY request_date DESC`
+    );
 
     res.json({ success: true, data: rows });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ success: false });
+  }
+});
+
+app.post("/ITApproveForm", async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    await db.query(
+      `UPDATE it_requests
+        SET status = 'APPROVED'
+        WHERE id = ?`,
+      [id]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
   }
 });
 

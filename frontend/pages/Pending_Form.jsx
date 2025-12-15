@@ -7,6 +7,12 @@ const Pending_Form = () => {
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [approvedIds, setApprovedIds] = useState([]);
+
+
+    const handleApproveSuccess = (id) => {
+        setApprovedIds((prev) => [...prev, id]);
+    };
 
     const getData = async () => {
         try {
@@ -78,16 +84,24 @@ const Pending_Form = () => {
                                         <td className="px-4 py-2">{item.reason}</td>
                                         <td className="px-4 py-2">{item.spec}</td>
                                         <td className="px-4 py-2">
-                                            <button
-                                                onClick={() => {
-                                                    setSelectedItem(item);
-                                                    setShowModal(true);
-                                                }}
-                                                className="px-3 py-1 text-sm bg-pink-500 text-white rounded-lg hover:bg-pink-600 cursor-pointer"
-                                            >
-                                                Waiting
-                                            </button>
+                                            {item.status === "APPROVED" ? (
+                                                <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-lg">
+                                                    Approved
+                                                </span>
+                                            ) : (
+                                                <button
+                                                    onClick={() => {
+                                                        setSelectedItem(item);
+                                                        setShowModal(true);
+                                                    }}
+                                                    className="px-3 py-1 text-sm bg-pink-500 text-white rounded-lg hover:bg-pink-600 cursor-pointer"
+                                                >
+                                                    Waiting
+                                                </button>
+                                            )}
                                         </td>
+
+
                                     </tr>
                                 ))
                             ) : (
@@ -104,6 +118,7 @@ const Pending_Form = () => {
             {showModal && (
                 <ModalPendingForm
                     data={selectedItem}
+                    onApprove={handleApproveSuccess}
                     onClose={() => {
                         setShowModal(false);
                         setSelectedItem(null);

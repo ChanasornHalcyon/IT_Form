@@ -1,9 +1,23 @@
 import React from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
 
-const ModalPendingForm = ({ onClose, data }) => {
+const ModalPendingForm = ({ onClose, data, onApprove }) => {
     const formatDate = (dateStr) =>
         dateStr ? new Date(dateStr).toLocaleDateString("th-TH") : "-";
+
+    const handleApprove = async () => {
+        try {
+            await axios.post("http://localhost:8000/ITApproveForm", {
+                id: data.id,
+            });
+            onApprove(data.id);
+            onClose();
+        } catch (err) {
+            console.error(err);
+            alert("อนุมัติไม่สำเร็จ");
+        }
+    };
 
     const Row = ({ label, value }) => (
         <div className="flex flex-col gap-1">
@@ -35,7 +49,7 @@ const ModalPendingForm = ({ onClose, data }) => {
                         </button>
                     </div>
 
-                    {/* Content */}
+
                     <div className="p-6 space-y-5 text-sm">
                         <div className="grid grid-cols-2 gap-4">
                             <Row label="ผู้ร้องขอ" value={data.requester} />
@@ -60,30 +74,28 @@ const ModalPendingForm = ({ onClose, data }) => {
                         <button
                             onClick={onClose}
                             className="
-                px-4 py-2 rounded-lg text-gray-700 bg-white border
-                hover:bg-gray-100 transition
-                active:scale-95 cursor-pointer
+                            px-4 py-2 rounded-lg text-gray-700 bg-white border
+                            hover:bg-gray-100 transition
+                            active:scale-95 cursor-pointer
               "
                         >
                             ปิด
                         </button>
 
                         <button
-                            onClick={() => {
-
-                                onClose();
-                            }}
+                            onClick={handleApprove}
                             className="
-                px-5 py-2 rounded-lg text-white font-medium
-                bg-gradient-to-r from-green-500 to-green-600
-                hover:from-green-600 hover:to-green-700
-                shadow-md hover:shadow-lg
-                transition-all duration-150
-                active:scale-95 cursor-pointer
-              "
+                                        px-5 py-2 rounded-lg text-white font-medium
+                                        bg-gradient-to-r from-green-500 to-green-600
+                                        hover:from-green-600 hover:to-green-700
+                                        shadow-md hover:shadow-lg
+                                        transition-all duration-150
+                                        active:scale-95 cursor-pointer
+                                        "
                         >
                             Approve
                         </button>
+
                     </div>
                 </div>
             </motion.div>

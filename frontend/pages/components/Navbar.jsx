@@ -44,7 +44,7 @@ const Navbar = () => {
              backdrop-blur-md
              p-5 flex justify-between items-center shadow-lg border-b border-white/20"
       >
-        <div className="flex items-center gap-2">
+        <div onClick={goHomePage} className="flex items-center gap-2 cursor-pointer">
           <MdComputer className="text-3xl text-black" />
           <span className="hidden lg:flex text-xl font-semibold text-gray-800">
             IT Form

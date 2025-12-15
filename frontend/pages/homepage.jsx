@@ -46,8 +46,9 @@ const Homepage = () => {
             whileTap={{ scale: 0.97 }}
             transition={{ duration: 0.12, ease: "easeOut" }}
             className={cardClass}
+            onClick={openPending}
           >
-            <span onClick={openPending} className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
+            <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
               Pending_Form
             </span>
           </motion.div>
