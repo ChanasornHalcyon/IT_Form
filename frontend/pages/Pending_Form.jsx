@@ -42,7 +42,7 @@ const Pending_Form = () => {
                                 <th className="px-4 py-3 text-start">รายละเอียด</th>
                                 <th className="px-4 py-3 text-start">เหตุผล</th>
                                 <th className="px-4 py-3 text-start">Spec</th>
-                                <th className="px-4 py-3 text-start">Pending</th>
+                                <th className="px-4 py-3 text-start">Action</th>
 
                             </tr>
                         </thead>
@@ -85,7 +85,7 @@ const Pending_Form = () => {
                                                 }}
                                                 className="px-3 py-1 text-sm bg-pink-500 text-white rounded-lg hover:bg-pink-600 cursor-pointer"
                                             >
-                                                Pending
+                                                Waiting
                                             </button>
                                         </td>
                                     </tr>
