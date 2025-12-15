@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
-import ModalPendingForm from "./components/ModalPendingForm";
-const Pending_Form = () => {
+
+const Approve_Form = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [showModal, setShowModal] = useState(false);
-    const [selectedItem, setSelectedItem] = useState(null);
-    const [approvedIds, setApprovedIds] = useState([]);
-
-    const handleApproveSuccess = (id) => {
-        setApprovedIds((prev) => [...prev, id]);
-    };
 
     const getData = async () => {
         try {
-            const res = await axios.get("http://localhost:8000/getITForm");
+            const res = await axios.get("http://localhost:8000/getApproveForm");
             if (res.data.success) {
                 setData(res.data.data);
             }
@@ -90,8 +83,8 @@ const Pending_Form = () => {
                                             ) : (
                                                 <button
                                                     onClick={() => {
-                                                        setSelectedItem(item);
-                                                        setShowModal(true);
+
+
                                                     }}
                                                     className="px-3 py-1 text-sm bg-pink-500 text-white rounded-lg hover:bg-pink-600 cursor-pointer"
                                                 >
@@ -114,18 +107,9 @@ const Pending_Form = () => {
                     </table>
                 </div>
             </div>
-            {showModal && (
-                <ModalPendingForm
-                    data={selectedItem}
-                    onApprove={handleApproveSuccess}
-                    onClose={() => {
-                        setShowModal(false);
-                        setSelectedItem(null);
-                    }}
-                />
-            )}
+
         </div>
     );
 };
 
-export default Pending_Form;
+export default Approve_Form;

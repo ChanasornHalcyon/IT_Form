@@ -81,7 +81,20 @@ app.get("/getITForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+app.get("/getApproveForm", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT *
+       FROM it_requests WHERE status ="APPROVED"
+       ORDER BY request_date DESC`
+    );
 
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
 app.post("/ITApproveForm", async (req, res) => {
   try {
     const { id } = req.body;

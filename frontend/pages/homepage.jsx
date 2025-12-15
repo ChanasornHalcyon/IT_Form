@@ -11,7 +11,9 @@ const Homepage = () => {
   const openPending = () => {
     router.push("./Pending_Form")
   }
-
+  const openApprove = () => {
+    router.push("./Approve_Form")
+  }
   useEffect(() => {
     const userRole = localStorage.getItem("role");
     setRole(userRole || "");
@@ -27,8 +29,8 @@ const Homepage = () => {
   return (
     <div className="container mx-auto max-w-[1920px] h-dvh bg-[#F8F8FF] relative">
       <Navbar />
-      <div className="py-40 md:py-32 flex justify-center">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="pt-40 md:pt-32 flex justify-center">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <motion.div
             whileHover={{ scale: 1.06, y: -2 }}
             whileTap={{ scale: 0.97 }}
@@ -50,6 +52,17 @@ const Homepage = () => {
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
               Pending_Form
+            </span>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.06, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
+            className={cardClass}
+            onClick={openApprove}
+          >
+            <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
+              Approve_Form
             </span>
           </motion.div>
         </div>
