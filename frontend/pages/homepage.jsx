@@ -50,13 +50,7 @@ const Homepage = () => {
         </motion.div>
       </div>
 
-      {showModal && (
-        <ModalITForm
-          onClose={() => setShowModal(false)}
-          onSubmit={handleSubmit}
-          submitting={submitting}
-        />
-      )}
+      {showModal && <ModalITForm onClose={() => setShowModal(false)} />}
     </div>
   );
 };

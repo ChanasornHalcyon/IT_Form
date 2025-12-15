@@ -1,8 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
-const path = require("path");
-const fs = require("fs");
 require("dotenv").config();
 
 const app = express();
@@ -34,55 +32,91 @@ app.post("/verifyUser", async (req, res) => {
   }
 });
 
-app.post("/addUser", async (req, res) => {
-  const { name, username, password, role } = req.body;
+app.post("/ITForm", async (req, res) => {
   try {
+    const {
+      purpose,
+      detail,
+      reason,
+      spec,
+      requester,
+      department,
+      request_date,
+      required_date,
+    } = req.body;
+
     await db.query(
-      "INSERT INTO user (name, username, password, role) VALUES (?, ?, ?, ?)",
-      [name, username, password, role]
+      `INSERT INTO it_requests
+       (purpose, detail, reason, spec, requester, department, request_date, required_date)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        purpose,
+        detail,
+        reason,
+        spec,
+        requester,
+        department,
+        request_date,
+        required_date,
+      ]
     );
-    res.json({ success: true, message: "User added" });
-  } catch (err) {
-    console.error("Add user error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
 
-app.put("/updatePassword", async (req, res) => {
-  const { id, password } = req.body;
-  try {
-    await db.query("UPDATE user SET password = ? WHERE id = ?", [password, id]);
-    res.json({ success: true, message: "Password updated successfully" });
-  } catch (err) {
-    console.error("Update password error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-app.get("/getUser", async (req, res) => {
-  try {
-    const [rows] = await db.query("SELECT id, username, role,name FROM user");
-    res.json({
-      success: true,
-      users: rows,
-    });
-  } catch (err) {
-    console.error("Fetch users error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
-  }
-});
-
-app.delete("/deleteUser/:id", async (req, res) => {
-  const { id } = req.params;
-
-  try {
-    await db.query("DELETE FROM user WHERE id = ?", [id]);
     res.json({ success: true });
   } catch (err) {
-    console.error("Delete user error:", err);
-    res.status(500).json({ success: false, message: "Server error" });
+    console.error(err);
+    res.status(500).json({ success: false });
   }
 });
+
+// app.post("/addUser", async (req, res) => {
+//   const { name, username, password, role } = req.body;
+//   try {
+//     await db.query(
+//       "INSERT INTO user (name, username, password, role) VALUES (?, ?, ?, ?)",
+//       [name, username, password, role]
+//     );
+//     res.json({ success: true, message: "User added" });
+//   } catch (err) {
+//     console.error("Add user error:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// });
+
+// app.put("/updatePassword", async (req, res) => {
+//   const { id, password } = req.body;
+//   try {
+//     await db.query("UPDATE user SET password = ? WHERE id = ?", [password, id]);
+//     res.json({ success: true, message: "Password updated successfully" });
+//   } catch (err) {
+//     console.error("Update password error:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// });
+
+// app.get("/getUser", async (req, res) => {
+//   try {
+//     const [rows] = await db.query("SELECT id, username, role,name FROM user");
+//     res.json({
+//       success: true,
+//       users: rows,
+//     });
+//   } catch (err) {
+//     console.error("Fetch users error:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// });
+
+// app.delete("/deleteUser/:id", async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//     await db.query("DELETE FROM user WHERE id = ?", [id]);
+//     res.json({ success: true });
+//   } catch (err) {
+//     console.error("Delete user error:", err);
+//     res.status(500).json({ success: false, message: "Server error" });
+//   }
+// });
 
 // app.post("/pushData", upload.single("file"), async (req, res) => {
 //   try {
