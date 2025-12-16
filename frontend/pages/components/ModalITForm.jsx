@@ -131,7 +131,7 @@ const ModalITForm = ({ onClose }) => {
                             disabled={submitting}
                             className="px-4 py-2 bg-blue-600 text-white rounded-lg cursor-pointer"
                         >
-                            {submitting ? "กำลังบันทึก..." : "ส่งฟอร์ม"}
+                            {submitting ? "กำลังส่งฟอร์ม..." : "ส่งฟอร์ม"}
                         </button>
                     </div>
                 </div>

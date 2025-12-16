@@ -55,7 +55,6 @@ app.post("/ITForm", async (req, res) => {
       required_date,
     } = req.body;
 
-    // 1. บันทึกข้อมูล
     await db.query(
       `INSERT INTO it_requests
        (purpose, detail, reason, spec, requester, department, request_date, required_date, status)
@@ -80,6 +79,7 @@ app.post("/ITForm", async (req, res) => {
     );
 
     const emailList = users.map((u) => u.email).join(",");
+    const pendingUrl = "http://localhost:3000/Pending_Form";
 
     await transporter.sendMail({
       from: `"IT System" <chanasornhockey@gmail.com>`,
@@ -90,8 +90,27 @@ app.post("/ITForm", async (req, res) => {
         <p><b>ผู้ร้องขอ:</b> ${requester}</p>
         <p><b>แผนก:</b> ${department}</p>
         <p><b>วัตถุประสงค์:</b> ${purpose}</p>
+        <p><b>รายละเอียดการร้องขอ:</b> ${detail}</p>
+        <p><b>เหตุผลหรือความจำเป็น:</b> ${reason}</p>
+        <p><b>มาตรฐาน / Spec ที่ต้องการ:</b> ${spec}</p>
         <p><b>วันที่ร้องขอ:</b> ${request_date}</p>
-       
+        <hr />
+           <p>
+             กรุณาคลิกที่ปุ่มด้านล่างเพื่อพิจารณาอนุมัติ
+          </p>
+
+          <a href="${pendingUrl}"
+             style="
+               display:inline-block;
+               padding:10px 18px;
+               background:#22c55e;
+               color:#fff;
+               text-decoration:none;
+               border-radius:6px;
+               font-weight:600;
+             ">
+            ไปที่หน้าForm
+          </a>
       `,
     });
     res.json({ success: true });
