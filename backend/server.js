@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const mysql = require("mysql2/promise");
+const nodemailer = require("nodemailer");
+
 require("dotenv").config();
 
 const app = express();
@@ -17,6 +19,14 @@ const initMySQL = async () => {
   });
 };
 initMySQL();
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "chanasornhockey@gmail.com",
+    pass: "expa qkhh sfdl lxxo",
+  },
+});
 
 app.post("/verifyUser", async (req, res) => {
   const { username, password } = req.body;
@@ -45,10 +55,11 @@ app.post("/ITForm", async (req, res) => {
       required_date,
     } = req.body;
 
+    // 1. บันทึกข้อมูล
     await db.query(
       `INSERT INTO it_requests
-       (purpose, detail, reason, spec, requester, department, request_date, required_date)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+       (purpose, detail, reason, spec, requester, department, request_date, required_date, status)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'PENDING')`,
       [
         purpose,
         detail,
@@ -61,12 +72,35 @@ app.post("/ITForm", async (req, res) => {
       ]
     );
 
+    const [users] = await db.query(
+      `SELECT email
+       FROM user
+       WHERE level >= 2
+         AND email IS NOT NULL`
+    );
+
+    const emailList = users.map((u) => u.email).join(",");
+
+    await transporter.sendMail({
+      from: `"IT System" <chanasornhockey@gmail.com>`,
+      to: emailList,
+      subject: " มีคำขอ IT เพื่อรอการอนุมัติ",
+      html: `
+        <h3>มีคำขอ IT ใหม่</h3>
+        <p><b>ผู้ร้องขอ:</b> ${requester}</p>
+        <p><b>แผนก:</b> ${department}</p>
+        <p><b>วัตถุประสงค์:</b> ${purpose}</p>
+        <p><b>วันที่ร้องขอ:</b> ${request_date}</p>
+       
+      `,
+    });
     res.json({ success: true });
   } catch (err) {
-    console.error(err);
+    console.error("ITForm Error:", err);
     res.status(500).json({ success: false });
   }
 });
+
 app.get("/getITForm", async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -81,6 +115,7 @@ app.get("/getITForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+
 app.get("/getApproveForm", async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -95,14 +130,15 @@ app.get("/getApproveForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+
 app.post("/ITApproveForm", async (req, res) => {
   try {
     const { id } = req.body;
 
     await db.query(
       `UPDATE it_requests
-        SET status = 'APPROVED'
-        WHERE id = ?`,
+       SET status = 'APPROVED'
+       WHERE id = ?`,
       [id]
     );
 

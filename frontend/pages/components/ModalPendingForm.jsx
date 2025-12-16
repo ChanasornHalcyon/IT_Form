@@ -36,7 +36,7 @@ const ModalPendingForm = ({ onClose, data, onApprove }) => {
             >
                 <div className="bg-white w-full max-w-[520px] rounded-2xl shadow-2xl overflow-hidden">
 
-                    {/* Header */}
+
                     <div className="px-6 py-4 border-b flex justify-between items-center bg-gradient-to-r from-blue-50 to-white">
                         <h2 className="text-lg font-semibold text-gray-800">
                             รายละเอียดคำขอ IT
