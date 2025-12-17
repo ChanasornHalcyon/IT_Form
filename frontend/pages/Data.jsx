@@ -9,7 +9,7 @@ const Data = () => {
   const fetchData = async () => {
     try {
       const res = await axios.get(
-        "https://halcyonone-internal.onrender.com/getAllData"
+        "http://localhost:8000/getAllData"
       );
       setData(res.data.data);
     } catch (err) {
@@ -56,8 +56,8 @@ const Data = () => {
                     <td className="px-4 py-2 border text-black">
                       {item.date
                         ? new Date(item.date).toLocaleDateString("sv-SE", {
-                            timeZone: "Asia/Bangkok",
-                          })
+                          timeZone: "Asia/Bangkok",
+                        })
                         : "-"}
                     </td>
                     <td className="px-4 py-2 border text-black">

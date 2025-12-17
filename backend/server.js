@@ -3,8 +3,6 @@ const cors = require("cors");
 const mysql = require("mysql2/promise");
 const nodemailer = require("nodemailer");
 
-require("dotenv").config();
-
 const app = express();
 app.use(cors({ origin: "*" }));
 app.use(express.json());
@@ -20,10 +18,12 @@ const initMySQL = async () => {
 };
 initMySQL();
 
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: "chanasornhockey@gmail.com",
+    secure: false,
     pass: "expa qkhh sfdl lxxo",
   },
 });
