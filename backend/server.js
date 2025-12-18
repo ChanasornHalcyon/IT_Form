@@ -231,6 +231,35 @@ app.post("/ITFixForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+app.get("/ITDashboard", async (req, res) => {
+  try {
+    const { status, startDate, endDate } = req.query;
+    let sql = `
+      SELECT 
+        DATE(request_date) AS date,
+        COUNT(*) AS total
+      FROM it_requests
+      WHERE status = ?
+    `;
+    const params = [status];
+
+    if (startDate && endDate) {
+      sql += ` AND request_date BETWEEN ? AND ?`;
+      params.push(startDate, endDate);
+    }
+
+    sql += `
+      GROUP BY DATE(request_date)
+      ORDER BY DATE(request_date)
+    `;
+
+    const [rows] = await db.query(sql, params);
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
 
 const PORT = 8000;
 app.listen(PORT, () =>
