@@ -82,10 +82,10 @@ const ModalFixForm = ({ onClose }) => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.25 }}
             >
-                <div className="bg-white w-[380px] sm:w-[520px] md:w-[500px] rounded-2xl shadow-xl">
+                <div className="bg-white w-[350px] sm:w-[520px] md:w-[500px] rounded-2xl shadow-xl">
                     <div className="p-5 border-b flex justify-between items-center">
                         <h2 className="text-2xl font-semibold text-black">แบบฟอร์มแจ้งซ่อม</h2>
-                        <button onClick={onClose} className="text-2xl text-black">✕</button>
+                        <button onClick={onClose} className="text-2xl text-black cursor-pointer">✕</button>
                     </div>
 
                     <div className="p-6 space-y-5 text-sm">

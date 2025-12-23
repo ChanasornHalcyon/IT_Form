@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
-
+import ModalCompleteForm from "./components/ModalCompleteForm";
 const Approve_Form = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedItem, setSelectedItem] = useState(null);
+
+    const openModal = (item) => {
+        setSelectedItem(item);
+        setShowModal(true);
+    };
 
     const getData = async () => {
         try {
@@ -19,6 +26,17 @@ const Approve_Form = () => {
         }
     };
 
+    const updateStatus = async (id, newStatus) => {
+        try {
+            await axios.put(`http://localhost:8000/updateStatus/${id}`, {
+                status: newStatus,
+            });
+
+            getData();
+        } catch (err) {
+            console.error(err);
+        }
+    };
     useEffect(() => {
         getData();
     }, []);
@@ -26,7 +44,6 @@ const Approve_Form = () => {
     return (
         <div className="container mx-auto max-w-[1920px] min-h-screen bg-[#F8F8FF] relative">
             <Navbar />
-
             <div className="container mx-auto max-w-[1450px] pt-32">
                 <div className="overflow-x-auto sm:px-2 md:px-4 lg:px-0">
                     <table className="min-w-full text-sm text-gray-700 border border-gray-200 rounded-xl shadow-lg overflow-hidden">
@@ -75,23 +92,24 @@ const Approve_Form = () => {
                                         <td className="px-4 py-2">{item.detail}</td>
                                         <td className="px-4 py-2">{item.reason}</td>
                                         <td className="px-4 py-2">{item.spec}</td>
-                                        <td className="px-4 py-2">
-                                            {item.status === "APPROVED" ? (
-                                                <span className="px-3 py-1 text-sm bg-green-100 text-green-700 rounded-lg">
-                                                    Approved
+                                        <td className="px-4 py-2 flex items-center gap-2">
+
+                                            {item.status === "COMPLETE" ? (
+                                                <span className="px-3 py-1 text-sm bg-blue-100 text-blue-700 rounded-lg">
+                                                    Completed
                                                 </span>
                                             ) : (
+
                                                 <button
-                                                    onClick={() => {
-
-
-                                                    }}
-                                                    className="px-3 py-1 text-sm bg-pink-500 text-white rounded-lg hover:bg-pink-600 cursor-pointer"
+                                                    onClick={() => openModal(item)}
+                                                    className="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer"
                                                 >
-                                                    Waiting
+                                                    Complete
                                                 </button>
                                             )}
                                         </td>
+
+
 
 
                                     </tr>
@@ -107,7 +125,16 @@ const Approve_Form = () => {
                     </table>
                 </div>
             </div>
-
+            {showModal && (
+                <ModalCompleteForm
+                    item={selectedItem}
+                    onClose={() => setShowModal(false)}
+                    onConfirm={() => {
+                        updateStatus(selectedItem.id, "COMPLETE");
+                        setShowModal(false);
+                    }}
+                />
+            )}
         </div>
     );
 };

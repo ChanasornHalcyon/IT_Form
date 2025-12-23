@@ -148,6 +148,22 @@ app.get("/getApproveForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+app.put("/updateStatus/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { status } = req.body; 
+
+    await db.query(
+      `UPDATE it_requests SET status = ? WHERE id = ?`,
+      [status, id]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
 
 app.post("/ITApproveForm", async (req, res) => {
   try {

@@ -104,7 +104,6 @@ const Data = () => {
                     </div>
 
 
-
                     <div className="bg-white rounded-xl shadow-sm px-4 py-3 flex flex-col md:flex-row gap-4 items-center justify-between">
                         <div className="flex gap-2 items-center text-sm">
                             <input
@@ -126,7 +125,7 @@ const Data = () => {
                             <button
                                 onClick={() => setChartType("bar")}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer
-      ${chartType === "bar"
+                                  ${chartType === "bar"
                                         ? "bg-white text-blue-600 shadow"
                                         : "text-gray-500 hover:text-blue-600"
                                     }`}
@@ -137,7 +136,7 @@ const Data = () => {
                             <button
                                 onClick={() => setChartType("line")}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer
-      ${chartType === "line"
+                                  ${chartType === "line"
                                         ? "bg-white text-blue-600 shadow"
                                         : "text-gray-500 hover:text-blue-600"
                                     }`}

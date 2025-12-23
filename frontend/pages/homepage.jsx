@@ -67,7 +67,7 @@ const Homepage = () => {
             onClick={openPendingPage}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              Pending_Form
+              ฟอร์มที่รออนุมัติ
             </span>
           </motion.div>
           <motion.div
@@ -78,7 +78,7 @@ const Homepage = () => {
             onClick={openApprovePage}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              Approve_Form
+              ฟอร์มที่รอแก้ไข
             </span>
           </motion.div>
           <motion.div
