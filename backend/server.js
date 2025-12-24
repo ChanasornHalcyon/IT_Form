@@ -30,7 +30,7 @@ const transporter = nodemailer.createTransport({
 app.post("/verifyUser", async (req, res) => {
   const { username, password } = req.body;
   const [rows] = await db.query(
-    "SELECT id, username, role, company FROM user WHERE username=? AND password=?",
+    "SELECT id, username, role, department FROM user WHERE username=? AND password=?",
     [username, password]
   );
 
@@ -124,7 +124,7 @@ app.get("/getITForm", async (req, res) => {
     const [rows] = await db.query(
       `SELECT *
        FROM it_requests
-       ORDER BY request_date DESC`
+        ORDER BY created_at DESC`
     );
 
     res.json({ success: true, data: rows });
@@ -167,7 +167,7 @@ app.get("/getCompleteForm", async (req, res) => {
 app.put("/updateStatus/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const { status, username } = req.body; 
+    const { status, username } = req.body;
 
     await db.query(
       `UPDATE it_requests 
@@ -182,7 +182,6 @@ app.put("/updateStatus/:id", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
-
 
 app.post("/ITApproveForm", async (req, res) => {
   try {

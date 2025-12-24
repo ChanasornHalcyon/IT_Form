@@ -63,13 +63,13 @@ const ModalFixForm = ({ onClose }) => {
 
     useEffect(() => {
         const uname = localStorage.getItem("username") || "";
-        const company = localStorage.getItem("company") || "";
+        const department = localStorage.getItem("department") || "";
         const today = new Date().toISOString().split("T")[0];
 
         setForm((prev) => ({
             ...prev,
             requester: uname,
-            department: company,
+            department: department,
             request_date: today,
         }));
     }, []);
