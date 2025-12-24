@@ -68,8 +68,52 @@ const Data = () => {
                 borderColor: status === "PENDING" ? "#FF3366" : "#2563eb",
                 tension: 0.35,
                 fill: chartType === "bar",
+                borderRadius: 8,
+                barThickness: 40,
             },
         ],
+    };
+    const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                position: "top",
+                display: false,
+                align: "center",
+                labels: {
+                    color: "#444",
+                    font: { size: 13, weight: "500" },
+                    padding: 10,
+                    boxWidth: 14,
+                    boxHeight: 14,
+                    usePointStyle: true,
+                },
+            },
+        },
+
+        scales: {
+            x: {
+                ticks: {
+                    color: "#555",
+                    font: { size: 12 },
+                    maxRotation: 45,
+                },
+                grid: {
+                    color: "#eee",
+                },
+            },
+            y: {
+                ticks: {
+                    color: "#555",
+                    font: { size: 12 },
+                },
+                grid: {
+                    color: "#f3f3f3",
+                },
+                beginAtZero: true,
+            },
+        },
     };
 
     return (
@@ -122,6 +166,7 @@ const Data = () => {
                         </div>
 
                         <div className="flex bg-gray-100 p-1 rounded-xl">
+
                             <button
                                 onClick={() => setChartType("bar")}
                                 className={`px-4 py-2 rounded-lg text-sm font-medium transition cursor-pointer
@@ -148,6 +193,18 @@ const Data = () => {
                     </div>
 
                     <div className="bg-white p-4 rounded-xl shadow-sm">
+                        <div className="flex justify-center items-center gap-2 mb-4">
+                            <span
+                                className="inline-block w-3 h-3 rounded-full"
+                                style={{
+                                    backgroundColor: status === "PENDING" ? "#FF3366" : "#3b82f6",
+                                }}
+                            ></span>
+                            <span className="text-gray-700 font-medium">
+                                {status === "PENDING" ? "Pending" : "Complete"}
+                            </span>
+                        </div>
+
                         {!isDateSelected ? (
                             <div className="text-center text-gray-400 py-16 text-sm">
                                 กรุณาเลือกช่วงวันที่เพื่อแสดงกราฟ
@@ -157,9 +214,13 @@ const Data = () => {
                                 กำลังโหลดข้อมูล...
                             </div>
                         ) : chartType === "bar" ? (
-                            <Bar data={data} />
+                            <div className="h-[400px]">
+                                <Bar data={data} options={options} />
+                            </div>
                         ) : (
-                            <Line data={data} />
+                            <div className="h-[400px]">
+                                <Line data={data} options={options} />
+                            </div>
                         )}
                     </div>
 
