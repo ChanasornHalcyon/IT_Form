@@ -148,14 +148,32 @@ app.get("/getApproveForm", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+
+app.get("/getCompleteForm", async (req, res) => {
+  try {
+    const [rows] = await db.query(
+      `SELECT *
+       FROM it_requests WHERE status ="COMPLETE"
+       ORDER BY request_date DESC`
+    );
+
+    res.json({ success: true, data: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false });
+  }
+});
+
 app.put("/updateStatus/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const { status } = req.body; 
+    const { status, username } = req.body; 
 
     await db.query(
-      `UPDATE it_requests SET status = ? WHERE id = ?`,
-      [status, id]
+      `UPDATE it_requests 
+       SET status = ?, completed_by = ?, completed_at = NOW()
+       WHERE id = ?`,
+      [status, username, id]
     );
 
     res.json({ success: true });
@@ -164,6 +182,7 @@ app.put("/updateStatus/:id", async (req, res) => {
     res.status(500).json({ success: false });
   }
 });
+
 
 app.post("/ITApproveForm", async (req, res) => {
   try {

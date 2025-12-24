@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import ModalCompleteForm from "./components/ModalCompleteForm";
+
 const Approve_Form = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -26,10 +27,11 @@ const Approve_Form = () => {
         }
     };
 
-    const updateStatus = async (id, newStatus) => {
+    const updateStatus = async (id, newStatus, username) => {
         try {
             await axios.put(`http://localhost:8000/updateStatus/${id}`, {
                 status: newStatus,
+                username: username,
             });
 
             getData();
@@ -37,6 +39,7 @@ const Approve_Form = () => {
             console.error(err);
         }
     };
+
     useEffect(() => {
         getData();
     }, []);
@@ -76,8 +79,15 @@ const Approve_Form = () => {
                                         className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition"
                                     >
                                         <td className="px-4 py-2">
-                                            {item.request_date
-                                                ? new Date(item.request_date).toLocaleDateString("th-TH")
+                                            {item.created_at
+                                                ? new Date(item.created_at).toLocaleString("th-TH", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                    hour12: false,
+                                                })
                                                 : "-"}
                                         </td>
 
@@ -130,7 +140,7 @@ const Approve_Form = () => {
                     item={selectedItem}
                     onClose={() => setShowModal(false)}
                     onConfirm={() => {
-                        updateStatus(selectedItem.id, "COMPLETE");
+                        updateStatus(selectedItem.id, "COMPLETE", localStorage.getItem("username"));
                         setShowModal(false);
                     }}
                 />

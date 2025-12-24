@@ -21,7 +21,6 @@ const ModalCompleteForm = ({ item, onClose, onConfirm }) => {
                         <button onClick={onClose} className="text-2xl text-black cursor-pointer">✕</button>
                     </div>
 
-
                     <div className="p-6 space-y-4 text-sm">
                         <div className="bg-gray-100 p-3 rounded-lg text-gray-800">
                             <div><b>ผู้ร้องขอ:</b> {item.requester}</div>

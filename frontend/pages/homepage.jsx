@@ -19,6 +19,9 @@ const Homepage = () => {
   const openDatapage = () => {
     router.push("./Data")
   }
+  const openCompletepage = () => {
+    router.push("./Complete_Form")
+  }
   useEffect(() => {
     const userRole = localStorage.getItem("role");
     setRole(userRole || "");
@@ -44,7 +47,7 @@ const Homepage = () => {
             className={cardClass}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              ฟอร์มร้องขอ IT
+              แบบฟอร์มร้องขอ IT
             </span>
           </motion.div>
 
@@ -56,7 +59,7 @@ const Homepage = () => {
             onClick={() => setshowModalFixForm(true)}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              ฟอร์มแจ้งซ่อม
+              แบบฟอร์มแจ้งซ่อมอุปกรณ์ IT
             </span>
           </motion.div>
           <motion.div
@@ -67,7 +70,7 @@ const Homepage = () => {
             onClick={openPendingPage}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              ฟอร์มที่รออนุมัติ
+              รายการที่รออนุมัติ
             </span>
           </motion.div>
           <motion.div
@@ -78,7 +81,18 @@ const Homepage = () => {
             onClick={openApprovePage}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              ฟอร์มที่รอแก้ไข
+              รายการที่รอดำเนินการ
+            </span>
+          </motion.div>
+          <motion.div
+            whileHover={{ scale: 1.06, y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ duration: 0.12, ease: "easeOut" }}
+            className={cardClass}
+            onClick={openCompletepage}
+          >
+            <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
+              ประวัติรายการ
             </span>
           </motion.div>
           <motion.div
@@ -89,7 +103,7 @@ const Homepage = () => {
             onClick={openDatapage}
           >
             <span className="text-lg font-semibold text-[#0B4EA2] tracking-wide">
-              สรุปผลข้อมูล
+              Report
             </span>
           </motion.div>
 

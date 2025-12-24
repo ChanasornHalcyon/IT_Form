@@ -45,7 +45,7 @@ const Pending_Form = () => {
                         <thead className="bg-black text-white">
                             <tr>
                                 <th className="px-4 py-3 text-start">วันที่ร้องขอ</th>
-                                <th className="px-4 py-3 text-start">วันที่ต้องการ</th>
+                                <th className="px-4 py-3 text-start text-nowrap">วันที่ต้องการ</th>
                                 <th className="px-4 py-3 text-start">ผู้ร้องขอ</th>
                                 <th className="px-4 py-3 text-start">แผนก</th>
                                 <th className="px-4 py-3 text-start">วัตถุประสงค์</th>
@@ -70,11 +70,19 @@ const Pending_Form = () => {
                                         key={item.id}
                                         className="odd:bg-white even:bg-gray-50 hover:bg-blue-50 transition"
                                     >
-                                        <td className="px-4 py-2">
-                                            {item.request_date
-                                                ? new Date(item.request_date).toLocaleDateString("th-TH")
+                                        <td className="px-4 py-2 text-nowrap">
+                                            {item.created_at
+                                                ? new Date(item.created_at).toLocaleString("th-TH", {
+                                                    day: "2-digit",
+                                                    month: "2-digit",
+                                                    year: "numeric",
+                                                    hour: "2-digit",
+                                                    minute: "2-digit",
+                                                    hour12: false,
+                                                })
                                                 : "-"}
                                         </td>
+
 
                                         <td className="px-4 py-2">
                                             {item.required_date
