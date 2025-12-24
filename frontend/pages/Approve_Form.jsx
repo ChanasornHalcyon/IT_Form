@@ -2,16 +2,23 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Navbar from "./components/Navbar";
 import ModalCompleteForm from "./components/ModalCompleteForm";
-
+import ModalProblemForm from "./components/ModalProblemForm";
 const Approve_Form = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [showProblemModal, setShowProblemModal] = useState(false);
+    const [selectedProblemItem, setSelectedProblemItem] = useState(null);
 
     const openModal = (item) => {
         setSelectedItem(item);
         setShowModal(true);
+    };
+
+    const openProblemModal = (item) => {
+        setSelectedProblemItem(item);
+        setShowProblemModal(true);
     };
 
     const getData = async () => {
@@ -116,7 +123,15 @@ const Approve_Form = () => {
                                                 >
                                                     Complete
                                                 </button>
+
+
                                             )}
+                                            <button
+                                                onClick={() => openProblemModal(item)}
+                                                className="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:bg-red-600 cursor-pointer"
+                                            >
+                                                Problem
+                                            </button>
                                         </td>
 
                                     </tr>
@@ -140,6 +155,12 @@ const Approve_Form = () => {
                         updateStatus(selectedItem.id, "COMPLETE", localStorage.getItem("username"));
                         setShowModal(false);
                     }}
+                />
+            )}
+            {showProblemModal && (
+                <ModalProblemForm
+                    item={selectedProblemItem}
+                    onClose={() => setShowProblemModal(false)}
                 />
             )}
         </div>
