@@ -277,27 +277,34 @@ app.post("/ITFixForm", async (req, res) => {
 
 app.get("/ITDashboard", async (req, res) => {
   try {
-    const { status, startDate, endDate } = req.query;
+    let { status, startDate, endDate } = req.query;
+
+    if (!["PENDING", "COMPLETE"].includes(status)) status = "PENDING";
+
+    const dateField = status === "COMPLETE" ? "completed_at" : "created_at";
+
     let sql = `
       SELECT 
-        DATE(request_date) AS date,
+        DATE(${dateField}) AS date,
         COUNT(*) AS total
       FROM it_requests
       WHERE status = ?
+        AND ${dateField} IS NOT NULL
     `;
     const params = [status];
 
     if (startDate && endDate) {
-      sql += ` AND request_date BETWEEN ? AND ?`;
+      sql += ` AND DATE(${dateField}) BETWEEN ? AND ?`;
       params.push(startDate, endDate);
     }
 
     sql += `
-      GROUP BY DATE(request_date)
-      ORDER BY DATE(request_date)
+      GROUP BY DATE(${dateField})
+      ORDER BY DATE(${dateField})
     `;
 
     const [rows] = await db.query(sql, params);
+
     res.json({ success: true, data: rows });
   } catch (err) {
     console.error(err);

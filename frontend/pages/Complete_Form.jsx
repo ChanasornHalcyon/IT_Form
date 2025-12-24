@@ -95,7 +95,6 @@ const Complete_Form = () => {
                     <td className="px-4 py-2">{item.reason}</td>
                     <td className="px-4 py-2">{item.spec}</td>
 
-
                     <td className="px-4 py-2">
                       {item.completed_by || "-"}
                     </td>

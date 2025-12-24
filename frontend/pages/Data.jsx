@@ -62,10 +62,10 @@ const Data = () => {
         labels: chartData.map((d) => formatDate(d.date)),
         datasets: [
             {
-                label: `จำนวน (${status})`,
+                label: status === "PENDING" ? "Pending" : "Complete",
                 data: chartData.map((d) => d.total),
-                backgroundColor: status === "PENDING" ? "#FF3366" : "#22c55e",
-                borderColor: status === "PENDING" ? "#FF3366" : "#16a34a",
+                backgroundColor: status === "PENDING" ? "#FF3366" : "#3b82f6",
+                borderColor: status === "PENDING" ? "#FF3366" : "#2563eb",
                 tension: 0.35,
                 fill: chartType === "bar",
             },
@@ -92,14 +92,14 @@ const Data = () => {
                         </button>
 
                         <button
-                            onClick={() => setStatus("APPROVED")}
-                            className={`px-8 h-11 rounded-xl text-sm font-semibold transition-all cursor-pointer  ${status === "APPROVED"
-
-                                ? "bg-green-500 text-white shadow-md"
-                                : "bg-white text-green-600 border border-green-300 hover:bg-green-50"
+                            onClick={() => setStatus("COMPLETE")}
+                            className={`px-8 h-11 rounded-xl text-sm font-semibold transition-all cursor-pointer  
+        ${status === "COMPLETE"
+                                    ? "bg-blue-500 text-white shadow-md"
+                                    : "bg-white text-blue-600 border border-blue-300 hover:bg-blue-50"
                                 }`}
                         >
-                            Approved
+                            Complete
                         </button>
                     </div>
 
